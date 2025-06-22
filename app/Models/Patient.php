@@ -10,7 +10,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Patient extends Authenticatable
 {
     use HasFactory, Notifiable, HasApiTokens;
-
     /**
      * The table associated with the model.
      *
@@ -24,8 +23,19 @@ class Patient extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        '',
-        '',
+        'name',
+        'email',
+        'phone',
+        'date_of_birth',
+        'gender',
+        'password'
     ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['password'];
     
 }
