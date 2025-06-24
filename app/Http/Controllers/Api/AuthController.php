@@ -40,7 +40,7 @@ class AuthController extends Controller
              * if both are true, then it's an authenticated patient
              * the we return his basic info and sanctum token
              *  */
-            if(!$patient->exists() || !Hash::check($request->password, $patient->password)){
+            if(!$patient->id || !Hash::check($request->password, $patient->password)){
                 return response()->json([
                     'message' => 'Login failure, due to incorrect email or password',
                     'errors' => [

@@ -1,7 +1,12 @@
 <?php
 
-use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\{
+    AuthController,
+    GlucoseTestController,
+    MedicationController as ApiMedicationController
+};
 use App\Http\Controllers\Api\Dashboard\{
+    MedicationController,
     PatientController
 };
 use Illuminate\Http\Request;
@@ -16,9 +21,19 @@ Route::group(['prefix' => 'v1', 'as' => 'api.'], function(){
     Route::group(['prefix' => 'auth', 'as' => 'auth.'], function(){
         Route::post('register', [AuthController::class, 'register'])->name('register');
         Route::post('login', [AuthController::class, 'login'])->name('login');
+        Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    });
+
+    Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'patients'], function(){
+        Route::group(['prefix' => 'glucose-tests', 'as' => 'glucose-test.'], function(){
+            Route::post('/', [GlucoseTestController::class, 'store'])->name('glucose-test.store');
+            Route::get('/history', [GlucoseTestController::class, 'index'])->name('glucose-test.index');
+        });
+        Route::get('medications', [ApiMedicationController::class, 'index']);
     });
 });
 
 Route::group(['prefix' => 'v1/dashboard', 'as' => 'api.dashboard.'], function(){
     Route::apiResource('patients', PatientController::class);
+    Route::apiResource('medications', MedicationController::class);
 });

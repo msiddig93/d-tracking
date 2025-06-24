@@ -10,8 +10,9 @@ class PatientResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'email' => $this->email,
+            'name' => $this->name ?? 'N/A',
+            'email' => $this->email ?? 'N/A',
+            'phone' => $this->phone ?? 'N/A',
             // Add more fields as needed
         ];
     }

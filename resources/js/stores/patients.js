@@ -3,22 +3,33 @@ import PatientApiService from '../ApiServices/PatientApiService';
 
 export const usePatientsStore = defineStore('patients', {
   state: () => ({
-    patients: [],
+    patients: {},
+    patientsList: [],
+    currentPatient: {},
     loading: false,
     error: null,
   }),
   actions: {
-    async fetchPatients() {
-      this.loading = true;
-      this.error = null;
+    async fetchPatients(page = 1) {
+        try {
+            this.loading = true;
+            this.patients = await PatientApiService.getAll(page);
+            this.loading = false;
+            
+        } catch (error) {
+            this.loading = false;
+            throw error;
+        }
+    },
+    async fetchPatientsList() {
       try {
-        const response = await PatientApiService.getAll();
-        this.patients = response.data;
-      } catch (err) {
-        this.error = err.response?.data?.message || err.message || 'Unknown error';
-      } finally {
-        this.loading = false;
+        this.patientsList = await PatientApiService.getPatientsList();
+      } catch (error) {
+        throw error;
       }
+    },
+    setCurrentPatient(patient) {
+      this.currentPatient = patient;
     },
     setPatients(patients) {
       this.patients = patients;

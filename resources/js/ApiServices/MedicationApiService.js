@@ -1,6 +1,6 @@
 import api from './BaseService';
-const baseURL = '/patients';
-const PatientApiService = {
+const baseURL = '/medications';
+const MedicationApiService = {
   async getAll(page = 1) {
     try {
       let response = await api.get(`${baseURL}?page=${page}`); 
@@ -8,9 +8,8 @@ const PatientApiService = {
     } catch (error) {
       throw error
     }
-    return api.get(`${baseURL}`);
   },
-  async getPatientsList() {
+  async getMedicationsList() {
     try {
       let response = await api.get(`${baseURL}/list`); 
       return response.data;
@@ -21,15 +20,20 @@ const PatientApiService = {
   get(id) {
     return api.get(`/${baseURL}/${id}`);
   },
-  create(patient) {
-    return api.post('/patients', patient);
+  async create(medication) {
+    try {
+      let response = await api.post(`${baseURL}`, medication); 
+      return response.data;
+    } catch (error) {
+      throw error
+    }
   },
-  update(id, patient) {
-    return api.put(`/patients/${id}`, patient);
+  update(id, medication) {
+    return api.put(`/medications/${id}`, medication);
   },
   delete(id) {
-    return api.delete(`/patients/${id}`);
+    return api.delete(`/medications/${id}`);
   },
 };
 
-export default PatientApiService;
+export default MedicationApiService;

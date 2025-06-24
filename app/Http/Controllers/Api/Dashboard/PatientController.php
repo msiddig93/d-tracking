@@ -13,9 +13,10 @@ class PatientController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $patients = Patient::all();
+        sleep(1);
+        $patients = Patient::latest('id')->paginate($request->get('per_page', 10));
         return PatientResource::collection($patients);
     }
 
@@ -31,8 +32,14 @@ class PatientController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Patient $patient)
+    public function show($id)
     {
+        if($id == 'list') {
+            $patients = Patient::get(['id', 'name']);
+            return response()->json($patients);
+        }
+
+        $patient = Patient::findOrFail($id);
         return new PatientResource($patient);
     }
 
