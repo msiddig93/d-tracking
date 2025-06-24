@@ -2,6 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Pagination from '@/Components/Pagination.vue'
 import { Head } from '@inertiajs/vue3';
+import SkeletonTable from '@/Components/SkeletonTable.vue';
 
 const props = defineProps({
 	users: {
@@ -33,7 +34,7 @@ const props = defineProps({
                 </div>
             </div>
         </div>
-        
+        <SkeletonTable :loading="true" :columns="4" :rows="5" />
         <div class="inline-block min-w-full overflow-hidden rounded-lg shadow">
             <table class="w-full whitespace-no-wrap">
                 <thead>
