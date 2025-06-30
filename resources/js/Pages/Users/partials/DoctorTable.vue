@@ -3,8 +3,8 @@
         <!-- Delete Modal -->
         <Modal :show="showDeleteModal" maxWidth="sm" @close="showDeleteModal = false">
             <div class="p-6 text-center">
-                <h2 class="text-lg font-semibold text-gray-800 mb-2">Delete Patient</h2>
-                <p class="text-gray-600 mb-6">Are you sure you want to delete this medication? This action cannot be undone.</p>
+                <h2 class="text-lg font-semibold text-gray-800 mb-2">Delete Doctor</h2>
+                <p class="text-gray-600 mb-6">Are you sure you want to delete this doctor? This action cannot be undone.</p>
                 <div class="flex justify-center gap-4 mt-4">
                     <button
                         class="px-4 py-2 rounded bg-red-600 text-white font-semibold hover:bg-red-700 transition"
@@ -32,13 +32,10 @@
                         Name
                     </th>
                     <th class="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                        Patient
+                        email
                     </th>
                     <th class="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                        Time
-                    </th>
-                    <th class="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                        Status
+                        role
                     </th>
                     <th class="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
                         -
@@ -46,22 +43,19 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="medication in medications.data" :key="medication.id" class="text-gray-700">
+                <tr v-for="doctor in doctors.data" :key="doctor.id" class="text-gray-700">
                     <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                        <p class="text-gray-900 whitespace-no-wrap">{{ medication.id }}</p>
+                        <p class="text-gray-900 whitespace-no-wrap">{{ doctor.id }}</p>
                     </td>
                     <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                        <p class="text-gray-900 whitespace-no-wrap">{{ medication.name }}</p>
+                        <p class="text-gray-900 whitespace-no-wrap">{{ doctor.name }}</p>
                     </td>
                     <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                        <p class="text-gray-900 whitespace-no-wrap">{{ medication.patient.name }}</p>
-                    </td>
-                    <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                        <p class="text-gray-900 whitespace-no-wrap">{{ medication.reminder_time }}</p>
+                        <p class="text-gray-900 whitespace-no-wrap">{{ doctor.email }}</p>
                     </td>
                     <td class="border-b bg-white border-gray-200 px-2 py-2 text-sm">
-                        <span :style="`background-color: ${medication.status_colors[0]}; color: ${medication.status_colors[1]}`" 
-                        class=" whitespace-no-wrap p-2 rounded-full">{{ medication.status }}</span>
+                        <span :style="`background-color: ${doctor.role_colors[1]}; color: ${doctor.role_colors[0]}`" 
+                        class=" whitespace-no-wrap p-2 rounded-full">{{ doctor.role_name }}</span>
                     </td>
                     <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <div class="flex justify-end gap-2">
@@ -70,7 +64,9 @@
                             <button
                                 class="flex items-center gap-1 rounded-full bg-yellow-100 text-yellow-700 px-3 py-1 text-xs font-semibold hover:bg-yellow-200 transition"
                                 title="Edit"
-                                @click="openEditModal(medication)"
+                                :class="{ 'cursor-not-allowed opacity-50': user.id == doctor.id }"
+                                :disabled="user.id == doctor.id"
+                                @click="openEditModal(doctor)"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5h2m-1 0v14m-7-7h14" />
@@ -81,7 +77,9 @@
                             <button
                                 class="flex items-center gap-1 rounded-full bg-red-100 text-red-700 px-3 py-1 text-xs font-semibold hover:bg-red-200 transition"
                                 title="Delete"
-                                @click="openDeleteModal(medication)"
+                                :class="{ 'cursor-not-allowed opacity-50': user.id == doctor.id }"
+                                :disabled="user.id == doctor.id"
+                                @click="openDeleteModal(doctor)"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -96,9 +94,9 @@
     </div>
     <div class="flex flex-col items-center border-t bg-white px-5 py-5 xs:flex-row xs:justify-between overflow-x-auto">
         <Pagination 
-            :links="medications.meta.links"
-            v-if="medications.meta && medications.meta.links.length"
-            @pagination-change-page="store.fetchMedications"
+            :links="doctors.meta.links"
+            v-if="doctors.meta && doctors.meta.links.length"
+            @pagination-change-page="store.fetchDoctors"
         />
     </div>
 </template>
@@ -106,31 +104,35 @@
 <script setup>
 import Pagination from '@/Components/Pagination.vue';
 import Modal from '@/Components/Modal.vue';
-import { useMedicationsStore } from '@/stores/medications';
+import { useDoctorsStore } from '@/stores/doctors';
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
+import { usePage } from '@inertiajs/vue3';
 
-const store = useMedicationsStore();
-const { medications } = storeToRefs(store);
-
+const store = useDoctorsStore();
+const { doctors } = storeToRefs(store);
+const user = usePage().props.auth.user;
 const showDeleteModal = ref(false);
-const medicationToDelete = ref(null);
+const doctorToDelete = ref(null);
 
-function openDeleteModal(medication) {
-    medicationToDelete.value = medication;
+function openDeleteModal(doctor) {
+    if(doctor.id == user.id) return false; // Prevent deleting the logged-in user
+    doctorToDelete.value = doctor;
     showDeleteModal.value = true;
 }
 
-const openEditModal = (medication) => {
-    console.log(medication);
+const openEditModal = (doctor) => {
+    if(doctor.id == user.id) return false 
     
-    store.setCurrentMedication(medication);
-    store.toggleMedicationModal();
+    store.setCurrentDoctor(doctor);
+    store.toggleDoctorModal();
 };
 
 function confirmDelete() {
+    if(doctorToDelete.value.id == user.id) return false 
+
     // You can call your delete logic here, e.g.:
-    // store.deletePatient(medicationToDelete.value.id)
+    store.deleteDoctor(doctorToDelete.value.id)
     showDeleteModal.value = false;
 }
 </script>

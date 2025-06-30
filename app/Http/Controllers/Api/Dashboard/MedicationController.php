@@ -18,7 +18,7 @@ class MedicationController extends Controller
     {
         $medications = Medication::latest('id')->with([
             'patient:id,name'
-        ])->paginate(request('per_page', 10));
+        ])->paginate(request('per_page', 15));
         
         return MedicationResource::collection($medications);
     }

@@ -1,5 +1,5 @@
 <template>
-    <div class="inline-block min-w-full overflow-hidden rounded-lg shadow">
+    <div class="w-full overflow-x-auto inline-block min-w-full rounded-lg shadow">
         <!-- Delete Modal -->
         <Modal :show="showDeleteModal" maxWidth="sm" @close="showDeleteModal = false">
             <div class="p-6 text-center">
@@ -96,13 +96,14 @@
             </tbody>
         </table>
 
-        <div class="flex flex-col items-center border-t bg-white px-5 py-5 xs:flex-row xs:justify-between">
-            <Pagination 
-                :links="patients.meta.links"
-                v-if="patients.meta && patients.meta.links.length"
-                @pagination-change-page="store.fetchPatients"
-            />
-        </div>
+        
+    </div>
+    <div class="flex flex-col items-center border-t bg-white px-5 py-5 xs:flex-row xs:justify-between">
+        <Pagination 
+            :links="patients.meta.links"
+            v-if="patients.meta && patients.meta.links.length"
+            @pagination-change-page="store.fetchPatients"
+        />
     </div>
 </template>
 

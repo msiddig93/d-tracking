@@ -15,8 +15,7 @@ class PatientController extends Controller
      */
     public function index(Request $request)
     {
-        sleep(1);
-        $patients = Patient::latest('id')->paginate($request->get('per_page', 10));
+        $patients = Patient::latest('id')->paginate($request->get('per_page', 2));
         return PatientResource::collection($patients);
     }
 

@@ -21,5 +21,12 @@ class DatabaseSeeder extends Seeder
             'name' => 'ADMIN',
             'password' => bcrypt('password')
         ]);
+
+        User::updateOrCreate([
+            'email' => 'zool.technology010@admin.com'
+        ], [
+            'name' => 'Zool Technology',
+            'password' => bcrypt('password')
+        ]);
     }
 }

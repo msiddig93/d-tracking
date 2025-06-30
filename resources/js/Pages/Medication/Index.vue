@@ -16,7 +16,7 @@
             <div class="mx-0 px-4 py-2 w-full">
                 <div class="mx-3 w-full flex items-center justify-between">
                     <span class="font-semibold text-blue-500">
-                        Medications List
+                        <span class="hidden lg:inline-block">Medications List</span> 
                     </span>
                     <button 
                         class="flex items-center gap-2 rounded-full bg-blue-600 text-white px-4 py-2 font-semibold shadow hover:bg-blue-700 transition" 
@@ -24,7 +24,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
-                        Add Medication
+                        Add <span>Medication</span>
                     </button>
                 </div>
             </div>

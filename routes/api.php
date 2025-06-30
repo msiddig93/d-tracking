@@ -6,9 +6,11 @@ use App\Http\Controllers\Api\{
     MedicationController as ApiMedicationController
 };
 use App\Http\Controllers\Api\Dashboard\{
+    GlucoseTestController as DashboardGlucoseTestController,
     MedicationController,
     PatientController
 };
+use App\Http\Controllers\DoctorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +36,8 @@ Route::group(['prefix' => 'v1', 'as' => 'api.'], function(){
 });
 
 Route::group(['prefix' => 'v1/dashboard', 'as' => 'api.dashboard.'], function(){
+    Route::apiResource('doctors', DoctorController::class);
     Route::apiResource('patients', PatientController::class);
     Route::apiResource('medications', MedicationController::class);
+    Route::apiResource('glucose-tests', DashboardGlucoseTestController::class)->only(['index', 'store', 'destroy']);
 });
