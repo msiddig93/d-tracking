@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class OnlyAdminAllowed
@@ -15,7 +16,7 @@ class OnlyAdminAllowed
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!$request->user() || !$request->user()->role != 'admin') {
+        if(!$request->user() || $request->user()->role != 'admin') {
             return redirect()->route('dashboard')->with('error', 'You are not authorized to access this page.');
         }
         return $next($request);
