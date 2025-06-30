@@ -39,7 +39,7 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/about', fn () => Inertia::render('About'))->name('about');
 
-    Route::get('doctors', [UserController::class, 'index'])->name('users.index');
+    Route::get('doctors', [UserController::class, 'index'])->middleware('is_admin')->name('users.index');
     Route::get('/patients', PatientController::class)->name('patients.index');
     Route::get('/medications', MedicationController::class)->name('medications.index');
     Route::get('/glucose-tests', GlucoseTestController::class)->name('glucose-tests.index');
