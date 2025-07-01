@@ -28,7 +28,7 @@ const PatientApiService = {
     return api.put(`/patients/${id}`, patient);
   },
   delete(id) {
-    return api.delete(`/patients/${id}`);
+    return api.delete(`${baseURL}/${id}`);
   },
 };
 

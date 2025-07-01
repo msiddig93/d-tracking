@@ -38,6 +38,13 @@ export const useMedicationsStore = defineStore('medications', {
     },
     toggleMedicationModal() {
       this.showAddMedicationModal = !this.showAddMedicationModal;
+    },
+    async delete(id){
+      try {
+        await MedicationApiService.delete(id);
+      } catch (error) {
+        throw error
+      }
     }
   },
 });

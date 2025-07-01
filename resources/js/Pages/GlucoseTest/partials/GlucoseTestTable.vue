@@ -1,7 +1,7 @@
 <template>
     <div class="w-full overflow-x-auto inline-block min-w-full rounded-lg shadow">
         <!-- Delete Modal -->
-        <Modal :show="showDeleteModal" maxWidth="sm" @close="showDeleteModal = false">
+        <Modal :show="showDeleteModal" :closeable="false" maxWidth="sm" @close="showDeleteModal = false">
             <div class="p-6 text-center">
                 <h2 class="text-lg font-semibold text-gray-800 mb-2">Delete Glucose Test</h2>
                 <p class="text-gray-600 mb-6">Are you sure you want to delete this test? This action cannot be undone.</p>
@@ -11,7 +11,7 @@
                         @click="confirmDelete"
                     >
                         Confirm
-                    </button>
+                    </button> 
                     <button
                         class="px-4 py-2 rounded bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition"
                         @click="showDeleteModal = false"
@@ -123,15 +123,19 @@ function openDeleteModal(glucoseTest) {
 }
 
 const openEditModal = (glucoseTest) => {
-    console.log(glucoseTest);
-    
     store.setCurrentGlucoseTest(glucoseTest);
     store.toggleGlucoseTestModal();
 };
 
-function confirmDelete() {
+async function confirmDelete() {
     // You can call your delete logic here, e.g.:
-    // store.deletePatient(glucoseTestToDelete.value.id)
-    showDeleteModal.value = false;
+    try {
+        await store.deleteGlucoseTest(glucoseTestToDelete.value.id)
+        showDeleteModal.value = false;
+        store.fetchGlucoseTests()
+    } catch (error) {
+        console.log(error);
+        showDeleteModal.value = false;
+    }
 }
 </script>

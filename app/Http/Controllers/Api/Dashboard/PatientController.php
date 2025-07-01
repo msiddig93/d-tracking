@@ -54,8 +54,9 @@ class PatientController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Patient $patient)
+    public function destroy($id)
     {
+        $patient = Patient::findOrFail($id);
         $patient->delete();
         return response()->json(['message' => 'Patient deleted successfully']);
     }

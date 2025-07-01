@@ -37,5 +37,12 @@ export const usePatientsStore = defineStore('patients', {
     clearPatients() {
       this.patients = [];
     },
+    async deletePatient(id){
+      try {
+          await PatientApiService.delete(id)
+      } catch (error) {
+        throw error
+      }
+    }
   },
 });

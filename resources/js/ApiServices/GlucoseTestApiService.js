@@ -32,7 +32,7 @@ const GlucoseTestApiService = {
     return api.put(`/glucoseTests/${id}`, glucoseTest);
   },
   delete(id) {
-    return api.delete(`/glucoseTests/${id}`);
+    return api.delete(`${baseURL}/${id}`);
   },
 };
 

@@ -1,7 +1,7 @@
 <template>
     <div class="w-full overflow-x-auto inline-block min-w-full rounded-lg shadow">
         <!-- Delete Modal -->
-        <Modal :show="showDeleteModal" maxWidth="sm" @close="showDeleteModal = false">
+        <Modal :show="showDeleteModal" :closeable="false" maxWidth="sm" @close="showDeleteModal = false">
             <div class="p-6 text-center">
                 <h2 class="text-lg font-semibold text-gray-800 mb-2">Delete Patient</h2>
                 <p class="text-gray-600 mb-6">Are you sure you want to delete this patient? This action cannot be undone.</p>
@@ -125,9 +125,15 @@ function openDeleteModal(patient) {
     showDeleteModal.value = true;
 }
 
-function confirmDelete() {
+async function confirmDelete() {
     // You can call your delete logic here, e.g.:
-    // store.deletePatient(patientToDelete.value.id)
-    showDeleteModal.value = false;
+    try {
+        await store.deletePatient(patientToDelete.value.id)
+        store.fetchPatients()
+        showDeleteModal.value = false;
+    } catch (error) {
+        showDeleteModal.value = false;
+        console.log(error);
+    }
 }
 </script>

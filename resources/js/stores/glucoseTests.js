@@ -38,6 +38,13 @@ export const useGlucoseTestsStore = defineStore('glucoseTests', {
     },
     toggleGlucoseTestModal() {
       this.showAddGlucoseTestModal = !this.showAddGlucoseTestModal;
+    },
+    async deleteGlucoseTest(id){
+      try {
+        await GlucoseTestApiService.delete(id)
+      } catch (error) {
+        throw error
+      }
     }
   },
 });

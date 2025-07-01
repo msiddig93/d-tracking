@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Dashboard\MedicationResource;
 use App\Models\Medication;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class MedicationController extends Controller
 {
@@ -49,8 +50,11 @@ class MedicationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $medication = Medication::findOrFail($id);
+        $medication->delete();
+
+        return response()->noContent(Response::HTTP_OK);
     }
 }
