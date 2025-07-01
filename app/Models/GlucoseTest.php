@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class GlucoseTest extends Model
 {
@@ -22,11 +23,6 @@ class GlucoseTest extends Model
      * @var array
      */
     protected $appends = ['status_colors', 'fasting'];
-
-    public function patient()
-    {
-        return $this->belongsTo(Patient::class);
-    }
 
     public function getFormattedTestTimeAttribute(){
         return $this->test_date
@@ -54,5 +50,15 @@ class GlucoseTest extends Model
         return $this->is_fasting
                 ? ['#D1FAE5', '#065F46'] // green background, green text
                 : ['#FEE2E2', '#991B1B'];
+    }
+
+    /**
+     * Get the patient that owns the GlucoseTest
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class, 'patient_id', 'id')->withDefault();
     }
 }

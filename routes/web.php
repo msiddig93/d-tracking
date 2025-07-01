@@ -7,6 +7,8 @@ use App\Http\Controllers\{
     UserController,
     ProfileController,
 };
+use App\Mail\GlucoseTestAlertDoctor;
+use App\Models\Patient;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -23,6 +25,8 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
+    // $patient = Patient::whereHas('glucoseTests')->first();
+    // return (new GlucoseTestAlertDoctor($patient, $patient->glucoseTests->last(), 'high'))->render();
     return redirect()->route('dashboard');
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),

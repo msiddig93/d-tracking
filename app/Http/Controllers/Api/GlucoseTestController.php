@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\GlucoseTestRequest;
 use App\Http\Resources\Api\Patient\GlucoseTestResource;
 use App\Models\GlucoseTest;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class GlucoseTestController extends Controller
 {
@@ -46,6 +49,29 @@ class GlucoseTestController extends Controller
 
             // Create the glucose test record
             $glucoseTest = GlucoseTest::create($data);
+
+            if($glucoseTest->level > 200) {
+                // Send alert to all doctors if glucose level is high
+                $doctors = User::get(['name', 'email']);
+                foreach ($doctors as $doctor) {
+                    Log::info("Sending high glucose alert to doctor: {$doctor->email}");
+                    Mail::to($doctor->email)->send(new \App\Mail\GlucoseTestAlertDoctor(
+                        $request->user(),
+                        $glucoseTest,
+                        'high'
+                    ));
+                }
+            } elseif ($glucoseTest->level < 70) {
+                // Send alert to all doctors if glucose level is low
+                $doctors = User::get(['name', 'email']);
+                foreach ($doctors as $doctor) {
+                    Mail::to($doctor->email)->send(new \App\Mail\GlucoseTestAlertDoctor(
+                        $request->user(),
+                        $glucoseTest,
+                        'low'
+                    ));
+                }
+            }
 
             return response()->json([
                 'message' => 'Glucose test created successfully',
